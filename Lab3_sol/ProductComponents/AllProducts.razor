@@ -1,0 +1,53 @@
+﻿@page "/Products"
+
+<h3>All Products</h3>
+@if (Products != null)
+{
+    <table class="table  table-striped">
+        <thead>
+        <tr>
+            <th>ID</th>
+            <th>Name</th>
+            <th>Price</th>
+        
+            <th>Category</th>
+            <th>Operations</th>
+        </tr>
+        </thead>
+        <tbody>
+        @foreach (var item in Products)
+       {
+           <tr>
+               <td>@item.Id</td>
+               <td>@item.Name</td>
+               <td>@item.Price</td>
+          
+               <td>@item.Cat_Id</td>
+               <td><a href="/Products/details/@item.Id">Details</a></td>
+               <td><a href="/Products/Edit/@item.Id">Edit</a></td>
+           </tr>
+       }
+       </tbody>
+    </table>
+}else
+{
+    <h1>No products! </h1>
+}
+@code {
+
+    public List<Product> Products { get; set; }
+    [Inject]
+    public Iservice<Product> Prodserv { get; set; }
+
+
+
+    protected override async Task OnInitializedAsync()
+    {
+        Products = await Prodserv.GetAll();
+        await base.OnInitializedAsync();
+    }
+
+
+
+
+}

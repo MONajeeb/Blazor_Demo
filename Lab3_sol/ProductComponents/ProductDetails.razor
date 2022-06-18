@@ -1,0 +1,43 @@
+﻿@page "/Products/details/{id:int}"
+
+@inject Iservice<Product> ProdSer
+
+<h3>Product Details</h3>
+@if (Prod != null)
+{
+<div class="card" style="width: 18rem;">
+  <img src=@Prod.Image class="card-img-top" alt="Product image">
+  <div class="card-body">
+    <h5 class="card-title">@Prod.Name</h5>
+    <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+  </div>
+  <ul class="list-group list-group-flush">
+    <li class="list-group-item">@Prod.Id</li>
+    <li class="list-group-item">@Prod.Price</li>
+    <li class="list-group-item">@Prod.Cat_Id</li>
+  </ul>
+  <div class="card-body">
+    <a href="#" class="card-link">Buy</a>
+  </div>
+</div>  
+}else
+{
+    <h1>Product ot found!</h1>
+}
+
+@code {
+    [Parameter]
+    public int id { get; set; }
+
+    public Product Prod { get; set; }
+    //[Inject]
+    //public EmployeeService empservice{ get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        Console.WriteLine($"{id}");
+        Prod =await ProdSer.Getbyid(id);
+      
+      await  base.OnInitializedAsync();
+    }
+}

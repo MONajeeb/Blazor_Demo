@@ -1,0 +1,60 @@
+﻿@page "/Products/Edit/{id:int}"
+@inject Iservice<Product>  ProdSer
+@inject Iservice<Category>  Catser
+@inject NavigationManager navManager
+
+<h3>Product Edit</h3>
+@if (Product != null)
+{
+    <h2>@Product.Name , @Product.Price , @Product.Id , @Product.Cat_Id</h2>
+    <!--built in components Edit Model-->
+    <EditForm Model="Product" OnSubmit="Save">
+        <div>
+            <label>Name</label>
+            <InputText @bind-Value="Product.Name" class="form-control"></InputText>
+        </div>
+         <div>
+            <label>Price</label>
+            <InputNumber @bind-Value="Product.Price" class="form-control"></InputNumber>
+        </div>
+         <div>
+            <label>image</label>
+            <InputText @bind-Value="Product.Image" class="form-control"></InputText>
+        </div>
+         <div>
+            <label>Category</label>
+            <InputSelect  @bind-Value="Product.Cat_Id" class="form-control">
+               @foreach (var item in CatList)
+               {
+                   <option value="@item.Id">@item.Name</option>
+               }
+            </InputSelect>
+        </div>
+        <input type="submit" value="Save"  class="btn btn-primary"/>
+    </EditForm>
+}
+else
+{
+    <h1>Try Again!!!</h1>
+}
+@code {
+    [Parameter]
+    public int id { get; set; }
+
+    public Product Product { get; set; }
+
+
+    public List<Category> CatList { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        Product = await ProdSer.Getbyid(id);
+        CatList =await  Catser.GetAll();
+        await base.OnInitializedAsync();
+    }
+    public void Save()
+    {
+        ProdSer.Update(id, Product);
+        navManager.NavigateTo("/Products");
+    }
+}
